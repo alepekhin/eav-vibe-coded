@@ -1,0 +1,114 @@
+Здесь собраны промпты для написания кода
+
+Q: Create database eav in PostgreSQL
+Create DDL for EAV model with entity type in this database
+Use small letters and snake case
+
+A: 
+Creating the database:
+```sql
+CREATE DATABASE eav;
+\c eav;
+```
+Here's a simple schema for an Entity-Attribute-Value (EAV) model. We will create three tables: `entities`, `attributes`, and `values`. The `values` table has foreign keys to both the 
+`entities` and `attributes` tables. 
+
+The 'entity' is a high level category of items you want to track (for example, a "user", an "order", etc.), 'attribute' is a specific aspect about that entity (for example, the user's 
+name, email address, order date, total cost, etc.) and 'value' is what attribute actually has for a particular instance of an entity.
+
+```sql
+CREATE TABLE entities (
+    id SERIAL PRIMARY KEY,  -- Auto-incrementing integer
+    name VARCHAR(255) NOT NULL  -- The name of the entity type
+);
+
+CREATE TABLE attributes (
+    id SERIAL PRIMARY KEY,  -- Auto-incrementing integer
+    name VARCHAR(255) NOT NULL  -- The name of the attribute
+);
+
+CREATE TABLE values (
+    entity_id INT REFERENCES entities(id),  -- References an entity
+    attribute_id INT REFERENCES attributes(id),  -- References an attribute
+    value TEXT,  -- This can hold any type of data
+    PRIMARY KEY (entity_id, attribute_id)  -- Composite key to prevent duplicate entries for the same entity-attribute pair
+);
+```
+This is a very basic schema. Depending on your needs, you may want to add more tables or constraints. For example, you might want to add a `types` table that specifies what type of 
+data each attribute can hold (e.g., string, integer, date), and use this in the `values` table instead of allowing any type of data with TEXT. 
+
+Please note that EAV model is not recommended for complex data models as it may lead to performance issues due to its schema flexibility. However, EAV can be suitable for many cases 
+where you don't know in advance what attributes an entity will have or when the number and types of these attributes are expected to change often (like tags on social media posts).
+
+
+Q: add table entity_types
+
+A: Sure, we can add a `entity_types` table. This new table could contain information about what type each specific entity is, which might be useful for querying purposes. For example, you 
+might have an 'user' entity but also an 'admin' entity, and you want to be able to easily distinguish between them in your application without having to look at the data itself.
+
+Here's how you could modify the schema:
+
+```sql
+CREATE TABLE entity_types  (
+    id SERIAL PRIMARY KEY,   -- Auto-incrementing integer
+    name VARCHAR(255) NOT NULL   -- The name of the entity type
+);
+
+ALTER TABLE entities ADD COLUMN entity_type_id INT REFERENCES entity_types(id);
+```
+
+Now each `entity` has an additional `entity_type_id` column that references a row in the `entity_types` table. This allows you to categorize your entities and query for all entities of 
+a certain type, among other things. 
+
+Please note that this change might require changes in how data is inserted into or queried from the database as well. For example, when creating new entities, you would now have to 
+specify an `entity_type_id`. When performing queries on your entities, you could then use the `entity_types` table to filter them based on their type.
+
+Q: create flyway migrations
+
+A: Flyway is a database migration tool which handles versioning of schema and data changes for any database including PostgreSQL in an easy way. 
+
+Here's how you could create Flyway migrations for the `entities`, `attributes`, `values`, and `entity_types` tables:
+
+1. First, let's start with the `entities` table. Create a new folder named `V1__Initial_setup` in your project (or wherever you have Flyway installed). Inside this folder, create two 
+SQL files: 
+    - `V1__Initial_setup__create_entity_table.sql` for creating the `entities` table:
+    ```sql
+    CREATE TABLE entities  (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL
+    );
+    ```
+    - `V1__Initial_setup__create_attribute_table.sql` for creating the `attributes` table:
+    ```sql
+    CREATE TABLE attributes  (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL
+    );
+    ```
+
+2. Now we'll create a migration to add the `values` and `entity_types` tables:
+    - Create a new folder named `V2__Add_value_and_entity_type_tables` in your project. 
+    - Inside this folder, create two SQL files:
+        - `V2__Add_value_and_entity_type_tables__create_values_table.sql` for creating the `values` table:
+        ```sql
+        CREATE TABLE values  (
+            entity_id INT REFERENCES entities(id),
+            attribute_id INT REFERENCES attributes(id),
+            value TEXT,
+            PRIMARY KEY (entity_id, attribute_id)
+        );
+        ```
+        - `V2__Add_value_and_entity_type_tables__create_entity_types_table.sql` for creating the `entity_types` table:
+        ```sql
+        CREATE TABLE entity_types  (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(255) NOT NULL
+        );
+        ```
+    - Add a file named `V3__Add_entity_type_id_to_entities.sql` in the `V1__Initial_setup` folder:
+    ```sql
+    ALTER TABLE entities ADD COLUMN entity_type_id INT REFERENCES entity_types(id);
+    ```
+Remember to follow Flyway's naming convention for migrations (`<VERSION>__<DESCRIPTION>`). The `<VERSION>` is a version number that should be incremented each time you make changes. 
+The `<DESCRIPTION>` is a description of what the migration does. This will help you keep track of your migrations and their order.
+
