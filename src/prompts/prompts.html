@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Prompts</title>
+    <style>
+      .accordion {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        transition: 0.4s;
+      }
+      
+      .active, .accordion:hover {
+        background-color: #ccc; 
+      }
+      
+      .panel {
+        padding: 0 18px;
+        display: none;
+        background-color: white;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <h2>Prompts used</h2>
+
+    
+    <button class="accordion">
+        <pre>
+<b>
+Create html page for menu with questions list and initially hidden answers.
+Don't use external libraries.
+</b>
+        </pre>
+    </button>
+    <pre class="panel">
+      <p>
+Sure, I can help you create a basic HTML structure that includes a collapsible accordion (which is similar to what you are asking). 
+
+Here it goes:
+
+```html
+&lt;!DOCTYPE html>
+&lt;html lang="en">
+  &lt;head>
+    &lt;meta charset="UTF-8" />
+    &lt;title>FAQs Page&lt;/title>
+    &lt;style>
+      .accordion {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        transition: 0.4s;
+      }
+      
+      .active, .accordion:hover {
+        background-color: #ccc; 
+      }
+      
+      .panel {
+        padding: 0 18px;
+        display: none;
+        background-color: white;
+        overflow: hidden;
+      }
+    &lt;/style>
+  &lt;/head>
+  
+  &lt;body>
+    &lt;h2>FAQs&lt;/h2>
+    
+    &lt;button class="accordion">Question 1?&lt;/button>
+    &lt;div class="panel">
+      &lt;p>Answer to Question 1.&lt;/p>
+    &lt;/div>
+    
+    &lt;button class="accordion">Question 2?&lt;/button>
+    &lt;div class="panel">
+      &lt;p>Answer to Question 2.&lt;/p>
+    &lt;/div>
+        
+    &lt;script>
+      var acc = document.getElementsByClassName("accordion");
+      
+      for (var i = 0; i &lt; acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+          this.classList.toggle("active");
+          var panel = this.nextElementSibling;
+          
+          if (panel.style.display === "block") {
+            panel.style.display = "none";
+          } else {
+            panel.style.display = "block";
+          }
+        });
+      }
+    &lt;/script>
+  &lt;/body>
+&lt;/html>
+```
+
+This code will create a basic FAQs page with two questions (Question 1? and Question 2?) that are hidden by default, and when clicked, they expand to 
+show the answers. The CSS makes it look nice. The JavaScript is what handles the collapsing of each question's answer when you click on its heading.
+
+
+      </p>
+    </pre>
+    
+    <button class="accordion">
+        <pre>
+<b>
+Create DDL for PostgreSQL
+create database eav if not exists
+create tables corresponding EAV structure if they are not exists
+Use lower case letters and snake case
+</b>
+        </pre>
+    </button>
+    <pre class="panel">
+      <p>
+Sure, here is a basic example of how you could create the database and tables in PostgreSQL. This uses SQL commands to do so. The exact schema depends 
+on your specific requirements, but this should give you a good starting point. 
+
+```sql
+CREATE DATABASE eav;
+\c eav;
+
+-- Entity table
+CREATE TABLE IF NOT EXISTS entities (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Attribute table
+CREATE TABLE IF NOT EXISTS attributes (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Value table
+CREATE TABLE IF NOT EXISTS values (
+    id SERIAL PRIMARY KEY,
+    entity_id INT REFERENCES entities(id),
+    attribute_id INT REFERENCES attributes(id),
+    value TEXT NOT NULL -- This can be changed to any valid data type based on your use case.
+);
+```
+
+In this schema:
+- `entities` is the entity table, which represents what you are trying to model in an EAV structure (e.g., a product, a user). Each record has an ID and 
+name.
+- `attributes` is the attribute table, representing characteristics of your entities (e.g., color, price). Again, each record has an ID and name.
+- `values` is the value table, storing actual data about your entities. It has a foreign key to both `entities` and `attributes` so that it knows which 
+entity and attribute each value corresponds to. The value itself can be of any type (TEXT in this case). 
+
+This is a very basic setup and might not fit all use cases, but it should give you a starting point. You may need to adjust it based on your specific 
+needs.
+      
+      </p>
+    </pre>
+
+    <button class="accordion">
+        <pre>
+<b>
+For given DDL add entity_types table with one to many relation to entity
+-- Entity table
+CREATE TABLE IF NOT EXISTS entities (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Attribute table
+CREATE TABLE IF NOT EXISTS attributes (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Value table
+CREATE TABLE IF NOT EXISTS values (
+    id SERIAL PRIMARY KEY,
+    entity_id INT REFERENCES entities(id),
+    attribute_id INT REFERENCES attributes(id),
+    value TEXT NOT NULL -- This can be changed to any valid data type based on your use case.
+);
+</b>
+        </pre>
+    </button>
+    <pre class="panel">
+      <p>
+To add an `entity_types` table with a one-to-many relation to the entity, you could make the following changes:
+
+```sql
+CREATE TABLE IF NOT EXISTS entity_types  (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Modify entities table
+ALTER TABLE entities  
+ADD COLUMN entity_type_id INT REFERENCES entity_types(id);
+```
+This will add an `entity_type_id` to the `entities` table which is a foreign key referencing id in the `entity_types` table. This sets up a one-to-many 
+relation from entities to entity types, i.e., multiple entities can have the same type defined by an entity type record.
+
+
+      </p>
+    </pre>
+
+    <button class="accordion">
+        <pre>
+<b>
+For given DDL create initial Flyway migration
+-- Entity table
+CREATE TABLE IF NOT EXISTS entities (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Attribute table
+CREATE TABLE IF NOT EXISTS attributes (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Value table
+CREATE TABLE IF NOT EXISTS values (
+    id SERIAL PRIMARY KEY,
+    entity_id INT REFERENCES entities(id),
+    attribute_id INT REFERENCES attributes(id),
+    value TEXT NOT NULL -- This can be changed to any valid data type based on your use case.
+);
+</b>
+        </pre>
+    </button>
+    <pre class="panel">
+      <p>
+Based on the SQL you've provided, here is an initial Flyway migration script:
+
+```java
+// V1__Initial_Schema.sql
+
+-- Entity table
+CREATE TABLE IF NOT EXISTS entities  (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Attribute table
+CREATE TABLE IF NOT EXISTS attributes  (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Value table
+CREATE TABLE IF NOT EXISTS values  (
+    id SERIAL PRIMARY KEY,
+    entity_id INT REFERENCES entities(id),
+    attribute_id INT REFERENCES attributes(id),
+    value TEXT NOT NULL -- This can be changed to any valid data type based on your use case.
+);
+```
+
+This script should go in a file located at `src/main/resources/db/migration` of your Flyway configuration and named as follows:
+`V1__Initial_Schema.sql`, where `V1` is the version number of this migration script. The name after the double underscore (__) is a description of what
+the migration does.
+
+Flyway will run it when you apply migrations and the database schema version matches the file's version pattern. If you want to apply only specific
+versions, use `flyway.target` property in your `flyway.conf` or pass `-target=<version>` as a command line argument.
+
+
+      </p>
+    </pre>
+
+    <button class="accordion">
+        <pre>
+<b>
+Describe PostgreSQL in spring application.yml 
+</b>
+        </pre>
+    </button>
+    <pre class="panel">
+      <p>
+In a Spring Boot application using Spring Data JPA for data access, you can describe PostgreSQL configuration in the `application.yml` file. Below is an 
+example of how it could look like:
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/test
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+```
+
+In this configuration, we're setting up a PostgreSQL database as our datasource for the Spring Boot application. The url specifies the location of your 
+PostgreSQl server (localhost in this case). The username and password are used to authenticate with the database. 
+
+The driver-class-name property tells Spring which JDBC driver class to use to connect to the PostgreSQL database. 
+
+`spring.jpa.hibernate.ddl-auto: update` line is setting Hibernate's DDL auto option, which controls what happens to the database schema when the 
+application starts. In this case, it's set to `update`, meaning that any changes in entity classes will automatically alter the schema of your 
+PostgreSQL database.
+
+
+      </p>
+    </pre>
+
+    <button class="accordion">
+        <pre>
+<b>
+For given DDL create Entity and Repository classes for Spring Data JPA model for existent spring boot poroject with alll dependecies exist
+-- Entity table
+CREATE TABLE IF NOT EXISTS entities  (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Attribute table
+CREATE TABLE IF NOT EXISTS attributes  (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Value table
+CREATE TABLE IF NOT EXISTS values  (
+    id SERIAL PRIMARY KEY,
+    entity_id INT REFERENCES entities(id),
+    attribute_id INT REFERENCES attributes(id),
+    value TEXT NOT NULL -- This can be changed to any valid data type based on your use case.
+);
+Implement referencies as many to one relationship and add one to many relationship to entities and values
+Use jakarta libraries.
+Don't use wildcard imports
+</b>
+        </pre>
+    </button>
+    <pre class="panel">
+      <p>
+Given your DDL, I will create Entity classes for `Entity`, `Attribute`, and `Value` respectively in accordance with the provided relationships. Here are these classes:
+
+```java
+import jakarta.persistence.*;
+
+@Entity
+public class Entity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String name;
+    
+    // Many to one relationship with Attribute via Value entity
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Value> values = new ArrayList&lt;>();
+}
+```
+```java
+import jakarta.persistence.*;
+
+@Entity
+public class Attribute {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String name;
+    
+    // One to many relationship with Entity via Value entity
+    @OneToMany(mappedBy = "attribute", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Value> values = new ArrayLis&lt;>();
+}
+```
+```java
+import jakarta.persistence.*;
+
+@Entity
+public class Value {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private String value; // This can be changed to any valid data type based on your use case.
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "entity_id")
+    private Entity entity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "attribute_id")
+    private Attribute attribute;
+}
+```
+Then, create the repositories for each of these entities:
+
+```java
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.demo.Entity; // replace with your actual package name
+
+public interface EntityRepository extends JpaRepository&lt;Entity, Long> { } 
+
+@org.springframework.stereotype.Repository
+public interface AttributeRepository extends JpaRepository&lt;Attribute, Long> { }
+
+@org.springframework.stereotype.Repository
+public interface ValueRepository extends JpaRepository&lt;Value, Long> { }
+
+      </p>
+    </pre>
+
+    <button class="accordion">
+        <pre>
+For given entity and JPA repository create SpringBoot controller and service for CRUD operations
+-- Entity class
+package com.gmail.alepekhine.eav.app;
+
+import jakarta.persistence.id;
+import jakarta.persistence.generationtype;
+import jakarta.persistence.onetomany;
+import jakarta.persistence.cascadetype;
+import jakarta.persistence.generatedvalue;
+import java.util.*;
+
+@jakarta.persistence.Entity
+public class Entity {
+    @id
+    @generatedvalue(strategy = generationtype.identity)
+    private long id;
+    
+    private string name;
+    
+    // many to one relationship with attribute via value entity
+    @onetomany(mappedby = "entity", cascade = cascadetype.all, orphanremoval = true)
+    private list<value> values = new arraylist&lt;>();
+}
+-- Repository class
+package com.gmail.alepekhine.eav.app;
+
+import jakarta.persistense.JpaRepository;
+
+public interface EntityRepository extends JpaRepository&lt;Entity, Long> { }            
+        </pre>
+    </button>
+    <pre class="panel">
+      <p>
+ Based on your entity and repository classes, you need a service class to perform CRUD operations and then an associated controller to handle HTTP requests. Here are the corresponding 
+service and controller classes in Spring Boot:
+
+-- Service class
+```java
+package com.gmail.alepekhine.eav.app;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.*;
+
+@Service
+public class EntityService {
+    
+    @Autowired
+    private final EntityRepository entityRepository;
+
+    public EntityService(EntityRepository entityRepository) {
+        this.entityRepository = entityRepository;
+    }
+
+    // Save operation
+    public Entity saveEntity(Entity entity) {
+        return entityRepository.save(entity);
+    }
+
+    // Get all entities operation
+    public List<Entity> getAllEntities() {
+        return (List<Entity>) entityRepository.findAll();
+    }
+
+    // Get by id operation
+    public Entity getById(Long id) {
+        return entityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found with id: " + id));
+    }
+
+    // Delete operation
+    public void deleteById(Long id) {
+        entityRepository.deleteById(id);
+    }
+}
+```
+-- Controller class
+```java
+package com.gmail<｜begin▁of▁sentence｜>alepekhine.eav.app;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.*;
+
+@RestController
+@RequestMapping("/api/entities")
+public class EntityController {
+    
+    @Autowired
+    private final EntityService entityService;
+
+    public EntityController(EntityService entityService) {
+        this.entityService = entityService;
+    }
+
+    // Save operation
+    @PostMapping
+    public ResponseEntity<Entity> saveEntity(@RequestBody Entity entity) {
+        return ResponseEntity.ok().body(this.entityService.saveEntity(entity));
+    }
+    
+    // Get all entities operation
+    @GetMapping
+    public ResponseEntity<List<Entity>> getAllEntities() {
+        return ResponseEntity.ok().body(entityService.getAllEntities());
+    }
+
+    // Get by id operation
+    @GetMapping("/{id}")
+    public ResponseEntity<Entity> getById(@PathVariable long id) {
+        return ResponseEntity.ok().body(entityService.getById(id));
+    } 
+    
+    // Delete operation
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteEntity(@PathVariable long id) {
+        entityService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }      
+}
+```
+Please replace `ResourceNotFoundException` with your own exception handling class if you have one. Also, remember to handle exceptions appropriately in the service methods. 
+
+The above code is a basic setup and doesn't cover all possible edge cases or error scenarios. You might want to add more functionalities depending on your specific needs.     
+      </p>
+    </pre>
+
+     <!--
+
+    <button class="accordion">
+        <pre>
+            Prompt example
+        </pre>
+    </button>
+    <pre class="panel">
+      <p>
+        Answer example
+      </p>
+    </pre>
+
+    -->
+
+
+    <script>
+      var acc = document.getElementsByClassName("accordion");
+      
+      for (var i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+          this.classList.toggle("active");
+          var panel = this.nextElementSibling;
+          
+          if (panel.style.display === "block") {
+            panel.style.display = "none";
+          } else {
+            panel.style.display = "block";
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
+
