@@ -6,33 +6,35 @@ import java.util.*;
 
 @Service
 public class ValueService {
+    private final ValueRepository valueRepository;
+    private final EntityRepository entityRepository;
+    private final AttributeRepository attributeRepository;
 
     @Autowired
-    private final ValueRepository valueRepository;
-
-    public ValueService(ValueRepository valueRepository) {
+    public ValueService(EntityRepository entityRepository, AttributeRepository attributeRepository, ValueRepository valueRepository) {
+        this.entityRepository = entityRepository;
+        this.attributeRepository = attributeRepository;
         this.valueRepository = valueRepository;
     }
 
-    // Save operation
-    public Value saveValue(Value value) {
+    public List<Value> getAll() {
+        return valueRepository.findAll();
+    }
+
+    public Value getValueById(Long id) {
+        return valueRepository.getReferenceById(id);
+    }
+
+    public Value createValue(Value value) {
         return valueRepository.save(value);
     }
 
-    // Get all entities operation
-    public List<Value> getAllEntities() {
-        return (List<Value>) valueRepository.findAll();
+    public Value updateValue(Value value) {
+        return valueRepository.save(value);
     }
 
-    // Get by id operation
-    public Value getById(Long id) {
-        return valueRepository.findById(id).orElseThrow(() -> new IllegalStateException("Value not found with id: " + id));
-    }
-
-    // Delete operation
-    public void deleteById(Long id) {
+    public void deleteValueById(Long id) {
         valueRepository.deleteById(id);
     }
-
 }
 

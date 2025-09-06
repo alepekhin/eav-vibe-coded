@@ -33,6 +33,9 @@
     <h2>Prompts used</h2>
 
     
+    <!--
+        --------------------- Start prompt ----------------------
+    -->
     <button class="accordion">
         <pre>
 <b>
@@ -85,7 +88,7 @@ Here it goes:
     
     &lt;button class="accordion">Question 1?&lt;/button>
     &lt;div class="panel">
-      &lt;p>Answer to Question 1.&lt;/p>
+    &lt;p>Answer to Question 1.&lt;/p>
     &lt;/div>
     
     &lt;button class="accordion">Question 2?&lt;/button>
@@ -120,444 +123,889 @@ show the answers. The CSS makes it look nice. The JavaScript is what handles the
       </p>
     </pre>
     
+    <!--
+        --------------------- Start prompt ----------------------
+    -->
     <button class="accordion">
         <pre>
-<b>
-Create DDL for PostgreSQL
-create database eav if not exists
-create tables corresponding EAV structure if they are not exists
-Use lower case letters and snake case
-</b>
+            <b>
+Create PlantUML diagram for Entity-Attribute-Value model
+with EntityType class having one to many relationship to Entity
+            </b>
         </pre>
     </button>
     <pre class="panel">
       <p>
-Sure, here is a basic example of how you could create the database and tables in PostgreSQL. This uses SQL commands to do so. The exact schema depends 
-on your specific requirements, but this should give you a good starting point. 
+@startuml
+' Define classes
+class EntityType {
+  +id: int
+  +name: string
+}
 
-```sql
-CREATE DATABASE eav;
-\c eav;
+class Entity {
+  +id: int
+  +entityTypeId: int
+  +name: string
+}
 
--- Entity table
-CREATE TABLE IF NOT EXISTS entities (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
+class Attribute {
+  +id: int
+  +name: string
+  +entityTypeId: int
+}
 
--- Attribute table
-CREATE TABLE IF NOT EXISTS attributes (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
+class Value {
+  +id: int
+  +entityId: int
+  +attributeId: int
+  +value: string
+}
 
--- Value table
-CREATE TABLE IF NOT EXISTS values (
-    id SERIAL PRIMARY KEY,
-    entity_id INT REFERENCES entities(id),
-    attribute_id INT REFERENCES attributes(id),
-    value TEXT NOT NULL -- This can be changed to any valid data type based on your use case.
-);
-```
-
-In this schema:
-- `entities` is the entity table, which represents what you are trying to model in an EAV structure (e.g., a product, a user). Each record has an ID and 
-name.
-- `attributes` is the attribute table, representing characteristics of your entities (e.g., color, price). Again, each record has an ID and name.
-- `values` is the value table, storing actual data about your entities. It has a foreign key to both `entities` and `attributes` so that it knows which 
-entity and attribute each value corresponds to. The value itself can be of any type (TEXT in this case). 
-
-This is a very basic setup and might not fit all use cases, but it should give you a starting point. You may need to adjust it based on your specific 
-needs.
-      
+' Relationships
+EntityType "1" -- "0..*" Entity : has
+Entity "1" -- "0..*" Value : has
+Attribute "1" -- "0..*" Value : defines
+@enduml      
       </p>
     </pre>
 
+    <!--
+        --------------------- Start prompt ----------------------
+    -->
     <button class="accordion">
         <pre>
-<b>
-For given DDL add entity_types table with one to many relation to entity
--- Entity table
-CREATE TABLE IF NOT EXISTS entities (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
+            <b>
+Create java backend for CRUD operations on tables
+generated from uml diagramm
+@startuml
+' Define classes
+class EntityType {
+  +id: int
+  +name: string
+}
 
--- Attribute table
-CREATE TABLE IF NOT EXISTS attributes (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
+class Entity {
+  +id: int
+  +entityTypeId: int
+  +name: string
+}
 
--- Value table
-CREATE TABLE IF NOT EXISTS values (
-    id SERIAL PRIMARY KEY,
-    entity_id INT REFERENCES entities(id),
-    attribute_id INT REFERENCES attributes(id),
-    value TEXT NOT NULL -- This can be changed to any valid data type based on your use case.
-);
-</b>
+class Attribute {
+  +id: int
+  +name: string
+  +entityTypeId: int
+}
+
+class Value {
+  +id: int
+  +entityId: int
+  +attributeId: int
+  +value: string
+}
+
+' Relationships
+EntityType "1" -- "0..*" Entity : has
+Entity "1" -- "0..*" Value : has
+Attribute "1" -- "0..*" Value : defines
+@enduml      
+Add Flyway migration for PostreSQL with table names in plural form and low case snake case letters
+Add unit and functional tests
+            </b>
         </pre>
     </button>
     <pre class="panel">
       <p>
-To add an `entity_types` table with a one-to-many relation to the entity, you could make the following changes:
+Below is a Java backend implementation using Spring Boot for CRUD operations on the tables defined in the UML diagram.
 
-```sql
-CREATE TABLE IF NOT EXISTS entity_types  (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
-
--- Modify entities table
-ALTER TABLE entities  
-ADD COLUMN entity_type_id INT REFERENCES entity_types(id);
-```
-This will add an `entity_type_id` to the `entities` table which is a foreign key referencing id in the `entity_types` table. This sets up a one-to-many 
-relation from entities to entity types, i.e., multiple entities can have the same type defined by an entity type record.
-
-
-      </p>
-    </pre>
-
-    <button class="accordion">
-        <pre>
-<b>
-For given DDL create initial Flyway migration
--- Entity table
-CREATE TABLE IF NOT EXISTS entities (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
-
--- Attribute table
-CREATE TABLE IF NOT EXISTS attributes (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
-
--- Value table
-CREATE TABLE IF NOT EXISTS values (
-    id SERIAL PRIMARY KEY,
-    entity_id INT REFERENCES entities(id),
-    attribute_id INT REFERENCES attributes(id),
-    value TEXT NOT NULL -- This can be changed to any valid data type based on your use case.
-);
-</b>
-        </pre>
-    </button>
-    <pre class="panel">
-      <p>
-Based on the SQL you've provided, here is an initial Flyway migration script:
+**Entity Classes**
 
 ```java
-// V1__Initial_Schema.sql
+@Entity
+public class EntityType {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String name;
 
--- Entity table
-CREATE TABLE IF NOT EXISTS entities  (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
+    // Getters and Setters
+    public int getId() {
+        return id;
+    }
 
--- Attribute table
-CREATE TABLE IF NOT EXISTS attributes  (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
+    public void setId(int id) {
+        this.id = id;
+    }
 
--- Value table
-CREATE TABLE IF NOT EXISTS values  (
-    id SERIAL PRIMARY KEY,
-    entity_id INT REFERENCES entities(id),
-    attribute_id INT REFERENCES attributes(id),
-    value TEXT NOT NULL -- This can be changed to any valid data type based on your use case.
-);
-```
+    public String getName() {
+        return name;
+    }
 
-This script should go in a file located at `src/main/resources/db/migration` of your Flyway configuration and named as follows:
-`V1__Initial_Schema.sql`, where `V1` is the version number of this migration script. The name after the double underscore (__) is a description of what
-the migration does.
-
-Flyway will run it when you apply migrations and the database schema version matches the file's version pattern. If you want to apply only specific
-versions, use `flyway.target` property in your `flyway.conf` or pass `-target=<version>` as a command line argument.
-
-
-      </p>
-    </pre>
-
-    <button class="accordion">
-        <pre>
-<b>
-Describe PostgreSQL in spring application.yml 
-</b>
-        </pre>
-    </button>
-    <pre class="panel">
-      <p>
-In a Spring Boot application using Spring Data JPA for data access, you can describe PostgreSQL configuration in the `application.yml` file. Below is an 
-example of how it could look like:
-
-```yaml
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost/test
-    username: postgres
-    password: root
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-```
-
-In this configuration, we're setting up a PostgreSQL database as our datasource for the Spring Boot application. The url specifies the location of your 
-PostgreSQl server (localhost in this case). The username and password are used to authenticate with the database. 
-
-The driver-class-name property tells Spring which JDBC driver class to use to connect to the PostgreSQL database. 
-
-`spring.jpa.hibernate.ddl-auto: update` line is setting Hibernate's DDL auto option, which controls what happens to the database schema when the 
-application starts. In this case, it's set to `update`, meaning that any changes in entity classes will automatically alter the schema of your 
-PostgreSQL database.
-
-
-      </p>
-    </pre>
-
-    <button class="accordion">
-        <pre>
-<b>
-For given DDL create Entity and Repository classes for Spring Data JPA model for existent spring boot poroject with alll dependecies exist
--- Entity table
-CREATE TABLE IF NOT EXISTS entities  (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
-
--- Attribute table
-CREATE TABLE IF NOT EXISTS attributes  (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
-
--- Value table
-CREATE TABLE IF NOT EXISTS values  (
-    id SERIAL PRIMARY KEY,
-    entity_id INT REFERENCES entities(id),
-    attribute_id INT REFERENCES attributes(id),
-    value TEXT NOT NULL -- This can be changed to any valid data type based on your use case.
-);
-Implement referencies as many to one relationship and add one to many relationship to entities and values
-Use jakarta libraries.
-Don't use wildcard imports
-</b>
-        </pre>
-    </button>
-    <pre class="panel">
-      <p>
-Given your DDL, I will create Entity classes for `Entity`, `Attribute`, and `Value` respectively in accordance with the provided relationships. Here are these classes:
-
-```java
-import jakarta.persistence.*;
+    public void setName(String name) {
+        this.name = name;
+    }
+}
 
 @Entity
 public class Entity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
+    private int id;
     private String name;
-    
-    // Many to one relationship with Attribute via Value entity
-    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Value> values = new ArrayList&lt;>();
+
+    @ManyToOne
+    @JoinColumn(name = "entity_type_id")
+    private EntityType entityType;
+
+    // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public EntityType getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(EntityType entityType) {
+        this.entityType = entityType;
+    }
 }
-```
-```java
-import jakarta.persistence.*;
 
 @Entity
 public class Attribute {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
+    private int id;
     private String name;
-    
-    // One to many relationship with Entity via Value entity
-    @OneToMany(mappedBy = "attribute", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Value> values = new ArrayLis&lt;>();
+
+    @ManyToOne
+    @JoinColumn(name = "entity_type_id")
+    private EntityType entityType;
+
+    // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public EntityType getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(EntityType entityType) {
+        this.entityType = entityType;
+    }
 }
-```
-```java
-import jakarta.persistence.*;
 
 @Entity
 public class Value {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    private String value; // This can be changed to any valid data type based on your use case.
+    private int id;
+    private String value;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "entity_id")
     private Entity entity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "attribute_id")
     private Attribute attribute;
+
+    // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public Entity getEntity() {
+        return entity;
+    }
+
+    public void setEntity(Entity entity) {
+        this.entity = entity;
+    }
+
+    public Attribute getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Attribute attribute) {
+        this.attribute = attribute;
+    }
 }
 ```
-Then, create the repositories for each of these entities:
+
+**Repository Interfaces**
 
 ```java
-import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.demo.Entity; // replace with your actual package name
-
-public interface EntityRepository extends JpaRepository&lt;Entity, Long> { } 
-
-@org.springframework.stereotype.Repository
-public interface AttributeRepository extends JpaRepository&lt;Attribute, Long> { }
-
-@org.springframework.stereotype.Repository
-public interface ValueRepository extends JpaRepository&lt;Value, Long> { }
-
-      </p>
-    </pre>
-
-    <button class="accordion">
-        <pre>
-For given entity and JPA repository create SpringBoot controller and service for CRUD operations
--- Entity class
-package com.gmail.alepekhine.eav.app;
-
-import jakarta.persistence.id;
-import jakarta.persistence.generationtype;
-import jakarta.persistence.onetomany;
-import jakarta.persistence.cascadetype;
-import jakarta.persistence.generatedvalue;
-import java.util.*;
-
-@jakarta.persistence.Entity
-public class Entity {
-    @id
-    @generatedvalue(strategy = generationtype.identity)
-    private long id;
-    
-    private string name;
-    
-    // many to one relationship with attribute via value entity
-    @onetomany(mappedby = "entity", cascade = cascadetype.all, orphanremoval = true)
-    private list<value> values = new arraylist&lt;>();
+public interface EntityTypeRepository extends JpaRepository<EntityType, Integer> {
 }
--- Repository class
-package com.gmail.alepekhine.eav.app;
 
-import jakarta.persistense.JpaRepository;
+public interface EntityRepository extends JpaRepository<Entity, Integer> {
+}
 
-public interface EntityRepository extends JpaRepository&lt;Entity, Long> { }            
-        </pre>
-    </button>
-    <pre class="panel">
-      <p>
- Based on your entity and repository classes, you need a service class to perform CRUD operations and then an associated controller to handle HTTP requests. Here are the corresponding 
-service and controller classes in Spring Boot:
+public interface AttributeRepository extends JpaRepository<Attribute, Integer> {
+}
 
--- Service class
+public interface ValueRepository extends JpaRepository<Value, Integer> {
+}
+```
+
+**Service Classes**
+
 ```java
-package com.gmail.alepekhine.eav.app;
+@Service
+public class EntityTypeService {
+    private final EntityTypeRepository repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.util.*;
+    @Autowired
+    public EntityTypeService(EntityTypeRepository repository) {
+        this.repository = repository;
+    }
+
+    public List<EntityType> getAll() {
+        return repository.findAll();
+    }
+
+    public EntityType getEntityById(int id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public EntityType createEntityType(String name) {
+        EntityType entityType = new EntityType();
+        entityType.setName(name);
+        return repository.save(entityType);
+    }
+
+    public EntityType updateEntityType(EntityType entityType, String name) {
+        if (entityType.getId() != null) {
+            entityType.setName(name);
+            return repository.save(entityType);
+        } else {
+            return null;
+        }
+    }
+
+    public void deleteEntityById(int id) {
+        repository.deleteById(id);
+    }
+}
 
 @Service
 public class EntityService {
-    
+    private final EntityRepository repository;
+
     @Autowired
-    private final EntityRepository entityRepository;
-
-    public EntityService(EntityRepository entityRepository) {
-        this.entityRepository = entityRepository;
+    public EntityService(EntityRepository repository) {
+        this.repository = repository;
     }
 
-    // Save operation
-    public Entity saveEntity(Entity entity) {
-        return entityRepository.save(entity);
+    public List<Entity> getAll() {
+        return repository.findAll();
     }
 
-    // Get all entities operation
-    public List<Entity> getAllEntities() {
-        return (List<Entity>) entityRepository.findAll();
+    public Entity getEntityById(int id) {
+        return repository.findById(id).orElse(null);
     }
 
-    // Get by id operation
-    public Entity getById(Long id) {
-        return entityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found with id: " + id));
+    public Entity createEntity(String name, int entityTypeId) {
+        Entity entity = new Entity();
+        entity.setName(name);
+        entity.setEntityType(repository.findById(entityTypeId).orElse(null));
+        return repository.save(entity);
     }
 
-    // Delete operation
-    public void deleteById(Long id) {
-        entityRepository.deleteById(id);
+    public Entity updateEntity(Entity entity, String name, int entityTypeId) {
+        if (entity.getId() != null && entity.getEntityType().getId() != null) {
+            entity.setName(name);
+            entity.setEntityType(repository.findById(entityTypeId).orElse(null));
+            return repository.save(entity);
+        } else {
+            return null;
+        }
+    }
+
+    public void deleteEntityById(int id) {
+        repository.deleteById(id);
+    }
+}
+
+@Service
+public class AttributeService {
+    private final AttributeRepository repository;
+
+    @Autowired
+    public AttributeService(AttributeRepository repository) {
+        this.repository = repository;
+    }
+
+    public List<Attribute> getAll() {
+        return repository.findAll();
+    }
+
+    public Attribute getAttributeById(int id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public Attribute createAttribute(String name, int entityTypeId) {
+        Attribute attribute = new Attribute();
+        attribute.setName(name);
+        attribute.setEntityType(repository.findById(entityTypeId).orElse(null));
+        return repository.save(attribute);
+    }
+
+    public Attribute updateAttribute(Attribute attribute, String name, int entityTypeId) {
+        if (attribute.getId() != null && attribute.getEntityType().getId() != null) {
+            attribute.setName(name);
+            attribute.setEntityType(repository.findById(entityTypeId).orElse(null));
+            return repository.save(attribute);
+        } else {
+            return null;
+        }
+    }
+
+    public void deleteAttributeById(int id) {
+        repository.deleteById(id);
+    }
+}
+
+@Service
+public class ValueService {
+    private final ValueRepository repository;
+
+    @Autowired
+    public ValueService(ValueRepository repository) {
+        this.repository = repository;
+    }
+
+    public List<Value> getAll() {
+        return repository.findAll();
+    }
+
+    public Value getValueById(int id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public Value createValue(String value, int entityId, int attributeId) {
+        Value valueEntity = new Value();
+        valueEntity.setValue(value);
+        valueEntity.setEntity(repository.findById(entityId).orElse(null));
+        valueEntity.setAttribute(repository.findById(attributeId).orElse(null));
+        return repository.save(valueEntity);
+    }
+
+    public Value updateValue(Value value, String value, int entityId, int attributeId) {
+        if (value.getId() != null && value.getEntity().getId() != null && value.getAttribute().getId() != null) {
+            value.setValue(value);
+            value.setEntity(repository.findById(entityId).orElse(null));
+            value.setAttribute(repository.findById(attributeId).orElse(null));
+            return repository.save(value);
+        } else {
+            return null;
+        }
+    }
+
+    public void deleteValueById(int id) {
+        repository.deleteById(id);
     }
 }
 ```
--- Controller class
+
+**Flyway Migration Configuration**
+
+Create a `application.properties` file with the following content:
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/mydatabase
+spring.datasource.username=myuser
+spring.datasource.password=mypassword
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+
+**Database Schema**
+
+After migration, the database schema will be created with table names in plural form and low case snake case letters:
+
+```sql
+CREATE TABLE entity_types (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE entities (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    entity_type_id INTEGER NOT NULL REFERENCES entity_types(id),
+    CONSTRAINT fk_entity_type FOREIGN KEY (entity_type_id) REFERENCES entity_types (id)
+);
+
+CREATE TABLE attributes (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    entity_type_id INTEGER NOT NULL REFERENCES entity_types(id),
+    CONSTRAINT fk_entity_type FOREIGN KEY (entity_type_id) REFERENCES entity_types (id)
+);
+
+CREATE TABLE values (
+    id SERIAL PRIMARY KEY,
+    value VARCHAR(255) NOT NULL,
+    entity_id INTEGER NOT NULL REFERENCES entities(id),
+    attribute_id INTEGER NOT NULL REFERENCES attributes(id),
+    CONSTRAINT fk_entity FOREIGN KEY (entity_id) REFERENCES entities(id),
+    CONSTRAINT fk_attribute FOREIGN KEY (attribute_id) REFERENCES attributes(id)
+);
+```
+
+**Unit Tests**
+
 ```java
-package com.gmail<｜begin▁of▁sentence｜>alepekhine.eav.app;
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class EntityTypeRepositoryTest {
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import java.util.*;
-
-@RestController
-@RequestMapping("/api/entities")
-public class EntityController {
-    
     @Autowired
-    private final EntityService entityService;
+    private EntityTypeRepository repository;
 
-    public EntityController(EntityService entityService) {
-        this.entityService = entityService;
+    @Test
+    public void testGetAll() {
+        List<EntityType> entityTypes = repository.findAll();
+        assertNotNull(entityTypes);
+        assertEquals(1, entityTypes.size());
     }
 
-    // Save operation
-    @PostMapping
-    public ResponseEntity<Entity> saveEntity(@RequestBody Entity entity) {
-        return ResponseEntity.ok().body(this.entityService.saveEntity(entity));
-    }
-    
-    // Get all entities operation
-    @GetMapping
-    public ResponseEntity<List<Entity>> getAllEntities() {
-        return ResponseEntity.ok().body(entityService.getAllEntities());
+    @Test
+    public void testGetEntityById() {
+        EntityType entityType = repository.findById(1L).orElse(null);
+        assertNotNull(entityType);
+        assertNotNull(entityType.getId());
     }
 
-    // Get by id operation
-    @GetMapping("/{id}")
-    public ResponseEntity<Entity> getById(@PathVariable long id) {
-        return ResponseEntity.ok().body(entityService.getById(id));
-    } 
-    
-    // Delete operation
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEntity(@PathVariable long id) {
-        entityService.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }      
+    @Test
+    public void testCreateEntityType() {
+        EntityType entityType = repository.save(new EntityType("test"));
+        assertNotNull(entityType);
+        assertEquals("test", entityType.getName());
+    }
+
+    @Test
+    public void testUpdateEntityType() {
+        EntityType entityType = new EntityType("test");
+        entityType.setId(1L);
+        EntityType updatedEntityType = repository.save(entityType);
+        assertNotNull(updatedEntityType);
+        assertEquals("test", updatedEntityType.getName());
+    }
+}
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class EntityRepositoryTest {
+
+    @Autowired
+    private EntityRepository repository;
+
+    @Test
+    public void testGetAll() {
+        List<Entity> entities = repository.findAll();
+        assertNotNull(entities);
+        assertEquals(1, entities.size());
+    }
+
+    @Test
+    public void testGetEntityById() {
+        Entity entity = repository.findById(1L).orElse(null);
+        assertNotNull(entity);
+        assertNotNull(entity.getId());
+    }
+
+    @Test
+    public void testCreateEntity() {
+        Entity entity = new Entity("test", 1);
+        Entity createdEntity = repository.save(entity);
+        assertNotNull(createdEntity);
+        assertEquals("test", createdEntity.getName());
+    }
+
+    @Test
+    public void testUpdateEntity() {
+        Entity entity = new Entity("test", 1);
+        entity.setId(1L);
+        Entity updatedEntity = repository.save(entity);
+        assertNotNull(updatedEntity);
+        assertEquals("test", updatedEntity.getName());
+    }
+}
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class AttributeRepositoryTest {
+
+    @Autowired
+    private AttributeRepository repository;
+
+    @Test
+    public void testGetAll() {
+        List<Attribute> attributes = repository.findAll();
+        assertNotNull(attributes);
+        assertEquals(1, attributes.size());
+    }
+
+    @Test
+    public void testGetAttributeById() {
+        Attribute attribute = repository.findById(1L).orElse(null);
+        assertNotNull(attribute);
+        assertNotNull(attribute.getId());
+    }
+
+    @Test
+    public void testCreateAttribute() {
+        Attribute attribute = new Attribute("test", 1);
+        Attribute createdAttribute = repository.save(attribute);
+        assertNotNull(createdAttribute);
+        assertEquals("test", createdAttribute.getName());
+    }
+
+    @Test
+    public void testUpdateAttribute() {
+        Attribute attribute = new Attribute("test", 1);
+        attribute.setId(1L);
+        Attribute updatedAttribute = repository.save(attribute);
+        assertNotNull(updatedAttribute);
+        assertEquals("test", updatedAttribute.getName());
+    }
+}
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class ValueRepositoryTest {
+
+    @Autowired
+    private ValueRepository repository;
+
+    @Test
+    public void testGetAll() {
+        List<Value> values = repository.findAll();
+        assertNotNull(values);
+        assertEquals(1, values.size());
+    }
+
+    @Test
+    public void testGetValueById() {
+        Value value = repository.findById(1L).orElse(null);
+        assertNotNull(value);
+        assertNotNull(value.getId());
+    }
+
+    @Test
+    public void testCreateValue() {
+        Value value = new Value("test", 1, 1);
+        Value createdValue = repository.save(value);
+        assertNotNull(createdValue);
+        assertEquals("test", createdValue.getValue());
+    }
+
+    @Test
+    public void testUpdateValue() {
+        Value value = new Value("test", 1, 1);
+        value.setId(1L);
+        Value updatedValue = repository.save(value);
+        assertNotNull(updatedValue);
+        assertEquals("test", updatedValue.getValue());
+    }
 }
 ```
-Please replace `ResourceNotFoundException` with your own exception handling class if you have one. Also, remember to handle exceptions appropriately in the service methods. 
 
-The above code is a basic setup and doesn't cover all possible edge cases or error scenarios. You might want to add more functionalities depending on your specific needs.     
+**Functional Tests**
+
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class EntityTypeServiceTest {
+
+    @Autowired
+    private EntityTypeRepository repository;
+
+    @Autowired
+    private EntityTypeService service;
+
+    @Before
+    public void setup() {
+        EntityType entityType = new EntityType("test");
+        repository.save(entityType);
+    }
+
+    @Test
+    public void testGetAll() {
+        List<EntityType> entityTypes = service.getAll();
+        assertNotNull(entityTypes);
+        assertEquals(1, entityTypes.size());
+    }
+
+    @Test
+    public void testGetEntityById() {
+        EntityType entityType = service.getEntityById(1L);
+        assertNotNull(entityType);
+        assertNotNull(entityType.getId());
+    }
+
+    @Test
+    public void testCreateEntityType() {
+        EntityType entityType = new EntityType("test");
+        service.createEntityType(entityType.getName());
+        List<EntityType> entityTypes = service.getAll();
+        assertNotNull(entityTypes);
+        assertEquals(2, entityTypes.size());
+    }
+
+    @Test
+    public void testUpdateEntityType() {
+        EntityType entityType = new EntityType("test");
+        service.createEntityType(entityType.getName());
+        service.updateEntityType(entityType, "updatedTest");
+        List<EntityType> entityTypes = service.getAll();
+        assertNotNull(entityTypes);
+        assertEquals(2, entityTypes.size());
+    }
+
+    @Test
+    public void testDeleteEntityById() {
+        EntityType entityType = new EntityType("test");
+        service.createEntityType(entityType.getName());
+        service.deleteEntityById(1L);
+        List<EntityType> entityTypes = service.getAll();
+        assertNull(entityTypes);
+    }
+}
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class EntityServiceTest {
+
+    @Autowired
+    private EntityRepository repository;
+
+    @Autowired
+    private EntityService service;
+
+    @Before
+    public void setup() {
+        Entity entity = new Entity("test", 1);
+        repository.save(entity);
+    }
+
+    @Test
+    public void testGetAll() {
+        List<Entity> entities = service.getAll();
+        assertNotNull(entities);
+        assertEquals(1, entities.size());
+    }
+
+    @Test
+    public void testGetEntityById() {
+        Entity entity = service.getEntityById(1L);
+        assertNotNull(entity);
+        assertNotNull(entity.getId());
+    }
+
+    @Test
+    public void testCreateEntity() {
+        Entity entity = new Entity("test", 1);
+        service.createEntity(entity.getName(), entity.getEntityType().getId());
+        List<Entity> entities = service.getAll();
+        assertNotNull(entities);
+        assertEquals(2, entities.size());
+    }
+
+    @Test
+    public void testUpdateEntity() {
+        Entity entity = new Entity("test", 1);
+        service.createEntity(entity.getName(), entity.getEntityType().getId());
+        service.updateEntity(entity, "updatedTest", entity.getEntityType().getId());
+        List<Entity> entities = service.getAll();
+        assertNotNull(entities);
+        assertEquals(2, entities.size());
+    }
+
+    @Test
+    public void testDeleteEntityById() {
+        Entity entity = new Entity("test", 1);
+        service.createEntity(entity.getName(), entity.getEntityType().getId());
+        service.deleteEntityById(1L);
+        List<Entity> entities = service.getAll();
+        assertNull(entities);
+    }
+}
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class AttributeServiceTest {
+
+    @Autowired
+    private AttributeRepository repository;
+
+    @Autowired
+    private AttributeService service;
+
+    @Before
+    public void setup() {
+        Attribute attribute = new Attribute("test", 1);
+        repository.save(attribute);
+    }
+
+    @Test
+    public void testGetAll() {
+        List<Attribute> attributes = service.getAll();
+        assertNotNull(attributes);
+        assertEquals(1, attributes.size());
+    }
+
+    @Test
+    public void testGetAttributeById() {
+        Attribute attribute = service.getAttributeById(1L);
+        assertNotNull(attribute);
+        assertNotNull(attribute.getId());
+    }
+
+    @Test
+    public void testCreateAttribute() {
+        Attribute attribute = new Attribute("test", 1);
+        service.createAttribute(attribute.getName(), attribute.getEntityType().getId());
+        List<Attribute> attributes = service.getAll();
+        assertNotNull(attributes);
+        assertEquals(2, attributes.size());
+    }
+
+    @Test
+    public void testUpdateAttribute() {
+        Attribute attribute = new Attribute("test", 1);
+        service.createAttribute(attribute.getName(), attribute.getEntityType().getId());
+        service.updateAttribute(attribute, "updatedTest", attribute.getEntityType().getId());
+        List<Attribute> attributes = service.getAll();
+        assertNotNull(attributes);
+        assertEquals(2, attributes.size());
+    }
+
+    @Test
+    public void testDeleteAttributeById() {
+        Attribute attribute = new Attribute("test", 1);
+        service.createAttribute(attribute.getName(), attribute.getEntityType().getId());
+        service.deleteAttributeById(1L);
+        List<Attribute> attributes = service.getAll();
+        assertNull(attributes);
+    }
+}
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class ValueServiceTest {
+
+    @Autowired
+    private ValueRepository repository;
+
+    @Autowired
+    private ValueService service;
+
+    @Before
+    public void setup() {
+        Value value = new Value("test", 1, 1);
+        repository.save(value);
+    }
+
+    @Test
+    public void testGetAll() {
+        List<Value> values = service.getAll();
+        assertNotNull(values);
+        assertEquals(1, values.size());
+    }
+
+    @Test
+    public void testGetValueById() {
+        Value value = service.getValueById(1L);
+        assertNotNull(value);
+        assertNotNull(value.getId());
+    }
+
+    @Test
+    public void testCreateValue() {
+        Value value = new Value("test", 1, 1);
+        service.createValue(value.getValue(), value.getEntity().getId(), value.getAttribute().getId());
+        List<Value> values = service.getAll();
+        assertNotNull(values);
+        assertEquals(2, values.size());
+    }
+
+    @Test
+    public void testUpdateValue() {
+        Value value = new Value("test", 1, 1);
+        service.createValue(value.getValue(), value.getEntity().getId(), value.getAttribute().getId());
+        service.updateValue(value, "updatedTest", value.getEntity().getId(), value.getAttribute().getId());
+        List<Value> values = service.getAll();
+        assertNotNull(values);
+        assertEquals(2, values.size());
+    }
+
+    @Test
+    public void testDeleteValueById() {
+        Value value = new Value("test", 1, 1);
+        service.createValue(value.getValue(), value.getEntity().getId(), value.getAttribute().getId());
+        service.deleteValueById(1L);
+        List<Value> values = service.getAll();
+        assertNull(values);
+    }
+}
+
+
       </p>
     </pre>
 
-     <!--
+
+    <!--
+        --------------------- Start prompt ----------------------
+    -->
+    <!--
 
     <button class="accordion">
         <pre>
-            Prompt example
+            <b>
+                Prompt example
+            </b>
         </pre>
     </button>
     <pre class="panel">

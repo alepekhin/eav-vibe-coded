@@ -1,23 +1,47 @@
 package com.gmail.alepekhine.eav.app;
 
 import jakarta.persistence.Id;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
-import java.util.*;
-import lombok.*;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 
 @jakarta.persistence.Entity
-@Data
+@Table(name = "entities")
 public class Entity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    
+    private Long id;
     private String name;
-    
-    // many to one relationship with attribute via value entity
-    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Value> values = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "entity_type_id")
+    private EntityType entityType;
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public EntityType getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(EntityType entityType) {
+        this.entityType = entityType;
+    }
 }
+

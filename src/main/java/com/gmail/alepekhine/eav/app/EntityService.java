@@ -21,12 +21,12 @@ public class EntityService {
 
     // Get all entities operation
     public List<Entity> getAllEntities() {
-        return (List<Entity>) entityRepository.findAll();
+        return entityRepository.findAll();
     }
 
     // Get by id operation
     public Entity getById(Long id) {
-        return entityRepository.findById(id).orElseThrow(() -> new IllegalStateException("Entity not found with id: " + id));
+        return entityRepository.getReferenceById(id);
     }
 
     // Delete operation

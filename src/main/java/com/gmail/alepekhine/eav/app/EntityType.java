@@ -1,25 +1,18 @@
 package com.gmail.alepekhine.eav.app;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
 
-@jakarta.persistence.Entity
-@Table(name = "attributes")
-public class Attribute {
+@Entity
+@Table(name = "entity_types")
+public class EntityType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "entity_type_id")
-    private EntityType entityType;
 
     // Getters and Setters
     public Long getId() {
@@ -36,14 +29,6 @@ public class Attribute {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public EntityType getEntityType() {
-        return entityType;
-    }
-
-    public void setEntityType(EntityType entityType) {
-        this.entityType = entityType;
     }
 }
 

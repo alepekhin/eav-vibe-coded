@@ -1,28 +1,53 @@
 package com.gmail.alepekhine.eav.app;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import java.util.*;
-import lombok.*;
+import jakarta.persistence.*;
 
-@jakarta.persistence.Entity
-@Data
+@jakarta.persistence.Entity(name = "values") // setting the table name explicitly
 public class Value {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String value;
 
-    private String value; // This can be changed to any valid data type based on your use case.
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "entity_id")
     private Entity entity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "attribute_id")
     private Attribute attribute;
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public Entity getEntity() {
+        return entity;
+    }
+
+    public void setEntity(Entity entity) {
+        this.entity = entity;
+    }
+
+    public Attribute getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Attribute attribute) {
+        this.attribute = attribute;
+    }
 }
+

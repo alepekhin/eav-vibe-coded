@@ -2,36 +2,48 @@ package com.gmail.alepekhine.eav.app;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.*;
+import java.util.List;
 
 @Service
 public class AttributeService {
-    
-    @Autowired
     private final AttributeRepository attributeRepository;
 
+    @Autowired
     public AttributeService(AttributeRepository attributeRepository) {
         this.attributeRepository = attributeRepository;
     }
 
-    // Save operation
-    public Attribute saveAttribute(Attribute attribute) {
+    // Create a new attribute
+    public Attribute create(Attribute attribute) {
         return attributeRepository.save(attribute);
     }
 
-    // Get all entities operation
-    public List<Attribute> getAllEntities() {
-        return (List<Attribute>) attributeRepository.findAll();
+    // Read an attribute by ID
+    public Attribute findById(Long id) {
+        return attributeRepository.getReferenceById(id);
     }
 
-    // Get by id operation
-    public Attribute getById(Long id) {
-        return attributeRepository.findById(id).orElseThrow(() -> new IllegalStateException("Attribute not found with id: " + id));
+    // Update an existing attribute
+    public Attribute update(Attribute attribute) {
+        if (attributeRepository.existsById(attribute.getId())) {
+            return attributeRepository.save(attribute);
+        } else {
+            throw new RuntimeException("No attribute with such Id");
+        }
     }
 
-    // Delete operation
+    // Delete an attribute by ID
     public void deleteById(Long id) {
-        attributeRepository.deleteById(id);
+        if (attributeRepository.existsById(id)) {
+            attributeRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("No attribute with such Id");
+        }
+    }
+
+    // Get a list of all attributes
+    public List<Attribute> getAll() {
+        return attributeRepository.findAll();
     }
 }
 

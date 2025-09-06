@@ -1,0 +1,31 @@
+@startuml
+' Define classes
+class EntityType {
+  +id: int
+  +name: string
+}
+
+class Entity {
+  +id: int
+  +entityTypeId: int
+  +name: string
+}
+
+class Attribute {
+  +id: int
+  +name: string
+  +entityTypeId: int
+}
+
+class Value {
+  +id: int
+  +entityId: int
+  +attributeId: int
+  +value: string
+}
+
+' Relationships
+EntityType "1" -- "0..*" Entity : has
+Entity "1" -- "0..*" Value : has
+Attribute "1" -- "0..*" Value : defines
+@enduml
