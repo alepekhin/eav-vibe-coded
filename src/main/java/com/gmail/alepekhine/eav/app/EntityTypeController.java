@@ -16,6 +16,7 @@ public interface EntityTypeRepository extends JpaRepository<EntityType, Long> {}
 //
 @RestController
 @RequestMapping("/api/entity-types")
+@CrossOrigin(origins = "http://localhost:4200")
 public class EntityTypeController {
 
     private final EntityTypeService entityTypeService;
