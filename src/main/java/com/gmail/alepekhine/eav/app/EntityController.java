@@ -23,27 +23,26 @@ public class EntityController {
 
     // Save operation
     @PostMapping
-    public ResponseEntity saveEntity(@RequestBody Entity entity) {
-        return ResponseEntity.ok().body(this.entityService.saveEntity(entity));
+    public ResponseEntity save(@RequestBody Entity entity) {
+        return ResponseEntity.ok(entityService.save(entity));
     }
     
     // Get all entities operation
     @GetMapping
-    public ResponseEntity getAllEntities() {
-        return ResponseEntity.ok().body(entityService.getAllEntities());
+    public ResponseEntity getAll() {
+        return ResponseEntity.ok(entityService.getAll());
     }
 
     // Get by id operation
     @GetMapping("/{id}")
-    public ResponseEntity getById(@PathVariable long id) {
-        return ResponseEntity.ok().body(entityService.getById(id));
+    public ResponseEntity findById(@PathVariable long id) {
+        return ResponseEntity.ok(entityService.findById(id));
     } 
     
     // Delete operation
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteEntity(@PathVariable long id) {
+    public void deleteById(@PathVariable long id) {
         entityService.deleteById(id);
-        return ResponseEntity.noContent().build();
     }      
 
 }

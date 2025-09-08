@@ -28,41 +28,27 @@ public class EntityTypeController {
 
     // Method to save an EntityType
     @PostMapping
-    public ResponseEntity<EntityType> saveEntityType(@RequestBody EntityType entityType) {
-        EntityType savedEntityType = entityTypeService.saveEntityType(entityType);
-        if (savedEntityType != null) {
-            return ResponseEntity.ok(savedEntityType);
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<EntityType> save(@RequestBody EntityType entityType) {
+        EntityType savedEntityType = entityTypeService.save(entityType);
+        return ResponseEntity.ok(savedEntityType);
     }
 
     // Method to get all EntityType
     @GetMapping
-    public List<EntityType> getAllEntityTypes() {
-        List<EntityType> entityTypes = entityTypeService.getAll();
-        if (entityTypes.isEmpty()) {
-            return Collections.emptyList();
-        } else {
-            return entityTypes;
-        }
+    public List<EntityType> getAll() {
+        return entityTypeService.getAll();
     }
 
     // Method to get one EntityType by id
     @GetMapping("/{id}")
-    public ResponseEntity<EntityType> getEntityTypeById(@PathVariable Long id) {
-        EntityType entityType = entityTypeService.getEntityTypeById(id);
-        if (entityType != null) {
-            return ResponseEntity.ok(entityType);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<EntityType> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(entityTypeService.findById(id));
     }
 
     // Method to delete an EntityType
     @DeleteMapping("/{id}")
-    public void deleteEntityType(@PathVariable Long id) {
-        entityTypeService.deleteEntityTypeById(id);
+    public void deleteById(@PathVariable Long id) {
+        entityTypeService.deleteById(id);
     }
 }
 

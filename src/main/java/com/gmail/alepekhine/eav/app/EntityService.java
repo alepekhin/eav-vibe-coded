@@ -15,17 +15,17 @@ public class EntityService {
     }
 
     // Save operation
-    public Entity saveEntity(Entity entity) {
+    public Entity save(Entity entity) {
         return entityRepository.save(entity);
     }
 
     // Get all entities operation
-    public List<Entity> getAllEntities() {
+    public List<Entity> getAll() {
         return entityRepository.findAll();
     }
 
     // Get by id operation
-    public Entity getById(Long id) {
+    public Entity findById(Long id) {
         return entityRepository.getReferenceById(id);
     }
 

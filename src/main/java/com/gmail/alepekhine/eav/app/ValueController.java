@@ -28,36 +28,26 @@ public class ValueController {
 
     // Create a new value
     @PostMapping
-    public ResponseEntity<Value> createValue(@RequestBody Value value) {
-        Value createdValue = valueService.createValue(value);
-        return new ResponseEntity<>(createdValue, HttpStatus.CREATED);
+    public ResponseEntity<Value> save(@RequestBody Value value) {
+        return ResponseEntity.ok(valueService.save(value));
     }
 
     // Get all values
     @GetMapping
-    public List<Value> getAllValues() {
+    public List<Value> getAll() {
         return valueService.getAll();
     }
 
     // Get a value by id
     @GetMapping("/{id}")
-    public ResponseEntity<Value> getValueById(@PathVariable Long id) {
-        Value value = valueService.getValueById(id);
-        return new ResponseEntity<>(value, HttpStatus.OK);
-    }
-
-    // Update an existing value
-    @PutMapping("/{id}")
-    public ResponseEntity<Value> updateValue(@RequestBody Value value) {
-        Value updatedValue = valueService.updateValue(value);
-        return new ResponseEntity<>(updatedValue, HttpStatus.OK);
+    public ResponseEntity<Value> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(valueService.findById(id));
     }
 
     // Delete a value by id
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteValue(@PathVariable Long id) {
-        valueService.deleteValueById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public void deleteById(@PathVariable Long id) {
+        valueService.deleteById(id);
     }
 }
 

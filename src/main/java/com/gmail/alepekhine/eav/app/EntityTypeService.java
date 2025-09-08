@@ -17,15 +17,15 @@ public class EntityTypeService {
         return repository.findAll();
     }
 
-    public EntityType getEntityTypeById(Long id) {
+    public EntityType findById(Long id) {
         return repository.getReferenceById(id);
     }
 
-    public EntityType saveEntityType(EntityType entityType) {
+    public EntityType save(EntityType entityType) {
         return repository.save(entityType);
     }
 
-    public void deleteEntityTypeById(Long id) {
+    public void deleteById(Long id) {
         repository.deleteById(id);
     }
 }

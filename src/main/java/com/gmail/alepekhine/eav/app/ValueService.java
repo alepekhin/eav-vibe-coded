@@ -21,19 +21,15 @@ public class ValueService {
         return valueRepository.findAll();
     }
 
-    public Value getValueById(Long id) {
+    public Value findById(Long id) {
         return valueRepository.getReferenceById(id);
     }
 
-    public Value createValue(Value value) {
+    public Value save(Value value) {
         return valueRepository.save(value);
     }
 
-    public Value updateValue(Value value) {
-        return valueRepository.save(value);
-    }
-
-    public void deleteValueById(Long id) {
+    public void deleteById(Long id) {
         valueRepository.deleteById(id);
     }
 }

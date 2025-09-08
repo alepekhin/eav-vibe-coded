@@ -13,23 +13,13 @@ public class AttributeService {
         this.attributeRepository = attributeRepository;
     }
 
-    // Create a new attribute
-    public Attribute create(Attribute attribute) {
+    public Attribute save(Attribute attribute) {
         return attributeRepository.save(attribute);
     }
 
     // Read an attribute by ID
     public Attribute findById(Long id) {
         return attributeRepository.getReferenceById(id);
-    }
-
-    // Update an existing attribute
-    public Attribute update(Attribute attribute) {
-        if (attributeRepository.existsById(attribute.getId())) {
-            return attributeRepository.save(attribute);
-        } else {
-            throw new RuntimeException("No attribute with such Id");
-        }
     }
 
     // Delete an attribute by ID

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/attributes")
 public class AttributeController {
+
     private final AttributeService attributeService;
 
     @Autowired
@@ -19,29 +20,21 @@ public class AttributeController {
         this.attributeService = attributeService;
     }
 
-    // Create a new attribute
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Attribute attribute) {
-        return ResponseEntity.ok(attributeService.create(attribute));
+    public ResponseEntity<?> save(@RequestBody Attribute attribute) {
+        return ResponseEntity.ok(attributeService.save(attribute));
     }
 
     // Read an existing attribute by ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> read(@PathVariable Long id) {
+    public ResponseEntity<?> findById(@PathVariable Long id) {
         return ResponseEntity.ok(attributeService.findById(id));
     }
     
-    // Update an existing attribute
-    @PutMapping
-    public ResponseEntity<?> update(@RequestBody Attribute attribute) {
-        return ResponseEntity.ok(attributeService.update(attribute));
-    }
-
     // Delete an existing attribute by ID
     @DeleteMapping
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public void deleteById(@PathVariable Long id) {
         attributeService.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
     
     // Get a list of all attributes
