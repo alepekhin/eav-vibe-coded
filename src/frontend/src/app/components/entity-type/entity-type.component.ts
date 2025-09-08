@@ -2,17 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { EntityTypeService, EntityType } from '../../services/entity-type.service';
 
 import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-entity-type',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './entity-type.component.html',
   styleUrls: ['./entity-type.component.css'],
   standalone: true
 })
 export class EntityTypeComponent implements OnInit {
   entityTypes: EntityType[] = [];
-  selectedEntityType?: EntityType;
+  selectedEntityType: EntityType = {id: 0, name: ''};
   newEntityType: EntityType = { name: '' };
 
   constructor(private entityTypeService: EntityTypeService) { }
@@ -31,16 +32,18 @@ export class EntityTypeComponent implements OnInit {
     this.selectedEntityType = { ...entityType };
   }
 
-  saveEntityType() {
-    if (this.selectedEntityType && this.selectedEntityType.id) {
-      // For this API, create is only POST, so editing might need a PUT method if available.
-      // Assuming create only, so editing is not implemented here.
-    } else {
-      this.entityTypeService.create(this.newEntityType).subscribe(() => {
+  createEntityType() {
+      this.entityTypeService.save(this.newEntityType).subscribe(() => {
         this.loadEntityTypes();
         this.newEntityType = { name: '' };
       });
-    }
+  }
+
+  updateEntityType() {
+      this.entityTypeService.save(this.selectedEntityType).subscribe(() => {
+        this.loadEntityTypes();
+        this.newEntityType = { name: '' };
+      });
   }
 
   deleteEntityType(id?: number) {
@@ -52,7 +55,6 @@ export class EntityTypeComponent implements OnInit {
   }
 
   cancel() {
-    this.selectedEntityType = undefined;
     this.newEntityType = { name: '' };
   }
 }

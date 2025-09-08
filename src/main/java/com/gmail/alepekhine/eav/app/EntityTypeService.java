@@ -21,19 +21,8 @@ public class EntityTypeService {
         return repository.getReferenceById(id);
     }
 
-    public EntityType createEntityType(String name) {
-        EntityType entityType = new EntityType();
-        entityType.setName(name);
+    public EntityType saveEntityType(EntityType entityType) {
         return repository.save(entityType);
-    }
-
-    public EntityType updateEntityType(EntityType entityType, String name) {
-        if (entityType.getId() != 0) {
-            entityType.setName(name);
-            return repository.save(entityType);
-        } else {
-            return null;
-        }
     }
 
     public void deleteEntityTypeById(Long id) {

@@ -29,7 +29,7 @@ public class EntityTypeController {
     // Method to save an EntityType
     @PostMapping
     public ResponseEntity<EntityType> saveEntityType(@RequestBody EntityType entityType) {
-        EntityType savedEntityType = entityTypeService.createEntityType(entityType.getName());
+        EntityType savedEntityType = entityTypeService.saveEntityType(entityType);
         if (savedEntityType != null) {
             return ResponseEntity.ok(savedEntityType);
         } else {

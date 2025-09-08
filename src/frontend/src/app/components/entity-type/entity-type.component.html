@@ -21,10 +21,32 @@
   </tbody>
 </table>
 
-<!-- Add new entity type 
-<div *ngIf="!selectedEntityType">
+<!-- Add new entity type -->
+<div>
   <h3>Add New Entity Type</h3>
   <input [(ngModel)]="newEntityType.name" placeholder="Name" />
-  <button (click)="saveEntityType()">Add</button>
+  <button (click)="createEntityType()">Add</button>
 </div>
--->
+
+<!-- Edit selected entity type -->
+<div *ngIf="selectedEntityType">
+  <h3>Edit Entity Type</h3>
+  <form (ngSubmit)="updateEntityType()">
+    <label for="editName">Name:</label>
+    <input
+      id="editId"
+      [(ngModel)]="selectedEntityType.id"
+      name="editId"
+      ng-readonly="true" 
+      type="hidden"
+      required
+    />
+    <input
+      id="editName"
+      [(ngModel)]="selectedEntityType.name"
+      name="editName"
+      required
+    />
+    <button type="submit">Save</button>
+  </form>
+</div>

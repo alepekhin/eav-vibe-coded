@@ -23,7 +23,7 @@ export class EntityTypeService {
     return this.http.get<EntityType>(`${this.apiUrl}/${id}`);
   }
 
-  create(entityType: EntityType): Observable<EntityType> {
+  save(entityType: EntityType): Observable<EntityType> {
     return this.http.post<EntityType>(this.apiUrl, entityType);
   }
 
