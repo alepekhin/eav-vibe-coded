@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { HttpClientModule } from '@angular/common/http';
 
 export interface EntityType {
-  id: number;
+  id?: number;
   name: string;
 }
 
