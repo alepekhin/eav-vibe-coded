@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EntityTypeService } from './entity-type.service';
+import { EntityTypeService } from './entity-type-service';
 
 describe('EntityTypeService', () => {
   let service: EntityTypeService;

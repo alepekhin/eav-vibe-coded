@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EntityTypeComponent } from './entity-type.component';
+import { EntityType } from './entity-type';
 
-describe('EntityTypeComponent', () => {
-  let component: EntityTypeComponent;
-  let fixture: ComponentFixture<EntityTypeComponent>;
+describe('EntityType', () => {
+  let component: EntityType;
+  let fixture: ComponentFixture<EntityType>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EntityTypeComponent]
+      imports: [EntityType]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(EntityTypeComponent);
+
+    fixture = TestBed.createComponent(EntityType);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
