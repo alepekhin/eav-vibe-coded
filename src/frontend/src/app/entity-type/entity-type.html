@@ -1,1 +1,50 @@
-<p>entity-type works!</p>
+<h2>Entity Types</h2>
+
+<!-- List all entity types -->
+
+
+<!-- List all entity types -->
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let et of entityTypes">
+      <td>{{ et.id }}</td>
+      <td>{{ et.name }}</td>
+      <td>
+        <button (click)="selectEntityType(et.id!)">Edit</button>
+        <button (click)="deleteEntityType(et.id!)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<!-- Add new EntityType -->
+<h3>Add New EntityType</h3>
+<form (ngSubmit)="saveEntityType()">
+  <input [(ngModel)]="newEntityType.name" name="name" placeholder="Name" required />
+  <button type="submit">Save</button>
+</form>
+
+<!-- Display selected EntityType details
+<div *ngIf="selectedEntityType">
+  <h3>Details</h3>
+  <p>ID: {{ selectedEntityType.id }}</p>
+  <p>Name: {{ selectedEntityType.name }}</p>
+</div-->
+
+<!-- Edit selected entity type -->
+<div *ngIf="selectedEntityType">
+  <h3>Edit Entity Type</h3>
+  <form (ngSubmit)="updateEntityType()">
+    <input [(ngModel)]="selectedEntityType.id" name="id" placeholder="Id" required />
+    <input [(ngModel)]="selectedEntityType.name" name="name" placeholder="Name" required />
+    <button type="submit">Save</button>
+  </form>
+</div>

@@ -1,12 +1,10 @@
 import { Component, signal } from '@angular/core';
-//import { RouterOutlet } from '@angular/router';
-import { EntityType } from './entity-type/entity-type';
+import { EntityTypeComponent } from './entity-type/entity-type';
 
 @Component({
   selector: 'app-root',
   imports: [
-//      RouterOutlet,
-      EntityType,
+      EntityTypeComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'

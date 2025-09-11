@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface EntityType {
-  id?: number;
+  id: number;
   name: string;
 }
 
@@ -24,6 +24,7 @@ export class EntityTypeService {
   }
 
   save(entityType: EntityType): Observable<EntityType> {
+      console.log("saving id "+entityType.id);
     return this.http.post<EntityType>(this.apiUrl, entityType);
   }
 

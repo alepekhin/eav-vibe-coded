@@ -22,6 +22,7 @@ public class EntityTypeService {
     }
 
     public EntityType save(EntityType entityType) {
+        System.out.println( "-------- saving id="+entityType.getId()+"   name="+entityType.getName());
         return repository.save(entityType);
     }
 
