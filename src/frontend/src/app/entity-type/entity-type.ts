@@ -13,6 +13,9 @@ import { CdkColumnDef } from '@angular/cdk/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSortModule, MatSort } from '@angular/material/sort';
 import { ViewChild } from '@angular/core'
+import { MatDialogModule } from '@angular/material/dialog';
+import { MyDialogComponent } from './entity-type-dialog';
+import { MatDialog } from '@angular/material/dialog';
 //import { BrowserModule } from '@angular/platform-browser';    
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -27,6 +30,7 @@ import { ViewChild } from '@angular/core'
     MatInputModule,
     MatPaginator,
     MatSortModule,
+    MatDialogModule,
    // BrowserModule,
    // BrowserAnimationsModule,
   ],
@@ -39,12 +43,12 @@ export class EntityTypeComponent implements OnInit {
   entityTypes: EntityType[] = [];
   selectedEntityType: EntityType = {id: 0, name: ''};
   newEntityType: EntityType = { name: '' };
-  displayedColumns: string[] = ['id', 'name'];
+  displayedColumns: string[] = ['id', 'name', 'actions'];
   dataSource = new MatTableDataSource<EntityType>(this.entityTypes);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private entityTypeService: EntityTypeService) { }
+  constructor(private entityTypeService: EntityTypeService, private dialog: MatDialog) { }
 
 
   ngOnInit(): void {
@@ -80,15 +84,16 @@ export class EntityTypeComponent implements OnInit {
   }
 
   // Update EntityType
-  updateEntityType(): void {
-      this.entityTypeService.save(this.selectedEntityType).subscribe(() => {
-        this.getAllEntityTypes();
-        this.newEntityType = { name: '' };
-      });
+  update(element: EntityType): void {
+      console.log('update '+element);
+//      this.entityTypeService.save(this.selectedEntityType).subscribe(() => {
+ //       this.getAllEntityTypes();
+  //      this.newEntityType = { name: '' };
+   //   });
   }
 
   // Delete an EntityType
-  deleteEntityType(id: number): void {
+  delete(id: number): void {
     if (id) {
       this.entityTypeService.delete(id).subscribe(() => {
         this.getAllEntityTypes();
@@ -99,6 +104,10 @@ export class EntityTypeComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  
+  openDialog() {
+    this.dialog.open(MyDialogComponent);
   }
 
 }

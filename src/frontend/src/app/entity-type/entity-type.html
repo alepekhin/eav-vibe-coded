@@ -1,30 +1,51 @@
-<h2>Entity Types</h2>
+<table style="width:25%">
+<tr>
+<td><h1>Entity Types</h1></td>
+<td><button mat-raised-button color="primary" class="btn btn-primary" (click)="openDialog()">Add new</button></td>
+</tr>
+</table>
 
 <!-- List all entity types -->
 
-<mat-form-field>
+<mat-form-field style="width: 25%">
   <mat-label>Filter</mat-label>
   <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
 </mat-form-field>
 
-<div class="mat-elevation-z8" style="width:25%">
 
-
+<div class="mat-elevation-z8 table-responsive" style="width:25%">
 <table
   mat-table
   [dataSource]="dataSource"
-  class="mat-elevation-z8"
+  class="table table-striped table-hover align-middle"
   matSort
 >
+<!--
   <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ column }}</th>
     <td mat-cell *matCellDef="let emp">{{ emp[column] }}</td>
   </ng-container>
+-->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+    <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+  </ng-container>
 
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Actions </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-button color="primary" class="btn btn-primary btn-sm me-2" (click)="update(element)">Update</button>
+      <button mat-button color="warn" class="btn btn-sm btn-danger" (click)="delete(element.id)">Delete</button>
+    </td>
+  </ng-container>
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
 </table>
-
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>"
 
 </div>
@@ -66,11 +87,13 @@
 </div-->
 
 <!-- Edit selected entity type -->
+<!--
 <div *ngIf="selectedEntityType">
   <h3>Edit Entity Type</h3>
-  <form (ngSubmit)="updateEntityType()">
+  <form (ngSubmit)="update()">
     <input [(ngModel)]="selectedEntityType.id" name="id" placeholder="Id" required />
     <input [(ngModel)]="selectedEntityType.name" name="name" placeholder="Name" required />
     <button type="submit">Save</button>
   </form>
 </div>
+-->
