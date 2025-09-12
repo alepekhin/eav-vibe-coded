@@ -2,8 +2,34 @@
 
 <!-- List all entity types -->
 
+<mat-form-field>
+  <mat-label>Filter</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+</mat-form-field>
 
-<!-- List all entity types -->
+<div class="mat-elevation-z8" style="width:25%">
+
+
+<table
+  mat-table
+  [dataSource]="dataSource"
+  class="mat-elevation-z8"
+  matSort
+>
+  <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ column }}</th>
+    <td mat-cell *matCellDef="let emp">{{ emp[column] }}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+</table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>"
+
+</div>
+
+<!--
 <table>
   <thead>
     <tr>
@@ -23,7 +49,7 @@
     </tr>
   </tbody>
 </table>
-
+-->
 
 <!-- Add new EntityType -->
 <h3>Add New EntityType</h3>
