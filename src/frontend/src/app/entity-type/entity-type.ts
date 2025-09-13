@@ -9,15 +9,13 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { CdkColumnDef } from '@angular/cdk/table';
+//import { CdkColumnDef } from '@angular/cdk/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSortModule, MatSort } from '@angular/material/sort';
 import { ViewChild } from '@angular/core'
 import { MatDialogModule } from '@angular/material/dialog';
 import { MyDialogComponent } from './entity-type-dialog';
 import { MatDialog } from '@angular/material/dialog';
-//import { BrowserModule } from '@angular/platform-browser';    
-//import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-entity-type',
@@ -31,24 +29,21 @@ import { MatDialog } from '@angular/material/dialog';
     MatPaginator,
     MatSortModule,
     MatDialogModule,
-   // BrowserModule,
-   // BrowserAnimationsModule,
   ],
   templateUrl: './entity-type.html',
   styleUrls: ['./entity-type.css'],
-  providers: [CdkColumnDef],
+ // providers: [CdkColumnDef],
 })
 export class EntityTypeComponent implements OnInit {
 
   entityTypes: EntityType[] = [];
-  selectedEntityType: EntityType = {id: 0, name: ''};
-  newEntityType: EntityType = { name: '' };
   displayedColumns: string[] = ['id', 'name', 'actions'];
   dataSource = new MatTableDataSource<EntityType>(this.entityTypes);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private entityTypeService: EntityTypeService, private dialog: MatDialog) { }
+  constructor(private entityTypeService: EntityTypeService, 
+              private dialog: MatDialog) { }
 
 
   ngOnInit(): void {
@@ -57,10 +52,6 @@ export class EntityTypeComponent implements OnInit {
   
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
-  }
-
-  selectEntityType(entityType: EntityType) {
-    this.selectedEntityType = { ...entityType };
   }
 
   // Fetch all entity types
@@ -75,21 +66,14 @@ export class EntityTypeComponent implements OnInit {
     });
   }
 
-  // Save a new EntityType
-  saveEntityType(): void {
-       this.entityTypeService.save(this.newEntityType).subscribe(() => {
-        this.getAllEntityTypes();
-        this.newEntityType = { name: '' };
-      });
+  // Create EntityType
+  create(): void {
+      this.openDialog({name:''});
   }
 
   // Update EntityType
   update(element: EntityType): void {
-      console.log('update '+element);
-//      this.entityTypeService.save(this.selectedEntityType).subscribe(() => {
- //       this.getAllEntityTypes();
-  //      this.newEntityType = { name: '' };
-   //   });
+      this.openDialog(element);
   }
 
   // Delete an EntityType
@@ -106,8 +90,22 @@ export class EntityTypeComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   
-  openDialog() {
-    this.dialog.open(MyDialogComponent);
+  openDialog(element: EntityType) {
+      console.log('open dialog element '+element);
+      const dialogRef = this.dialog.open(MyDialogComponent, {
+      width: '400px',
+      data: element
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+        this.getAllEntityTypes();
+      console.log('Dialog was closed');
+      // You can handle the result here
+      if (result) {
+        // Do something based on the result
+      }
+    });
+    //this.dialog.open(MyDialogComponent);
   }
 
 }

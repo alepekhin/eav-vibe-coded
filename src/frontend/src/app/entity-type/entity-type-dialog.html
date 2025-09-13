@@ -1,0 +1,13 @@
+    <h1 mat-dialog-title *ngIf="!entityType.id">New Entity Type</h1>
+    <h1 mat-dialog-title *ngIf="entityType.id">Update Entity Type</h1>
+    <form (ngSubmit)="saveEntityType()">
+    <div mat-dialog-content>
+      <input [(ngModel)]="entityType.name" name="name" placeholder="Name" required style="width:100%"/>
+    </div>
+
+    <mat-dialog-actions style="display: flex; justify-content: space-between; width: 100%;">
+      <a href="#" (click)="closeDialog($event)">Close</a>
+      <button mat-button class="btn btn-primary" type="submit">Save</button>
+    </mat-dialog-actions>
+    </form>
+
